@@ -299,22 +299,22 @@
   .chip.c-del{margin-left:auto;color:var(--muted)}
   .chip.c-del:hover{border-color:var(--c-mustdo);color:var(--c-mustdo)}
 
-  /* ===== Scheduled tab ===== */
-  .sched-onmain{margin-top:24px;padding-top:20px;border-top:1px solid var(--line)}
-  .sched-onmain .sch-head{margin-bottom:12px}
-  .sch-form{display:grid;grid-template-columns:1fr 150px 160px auto;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:14px;margin-bottom:16px}
-  @media(max-width:680px){.sch-form{grid-template-columns:1fr 1fr}}
-  .sch-form input,.sch-form select{font-family:var(--font-body);font-size:13px;border:1px solid var(--line);background:var(--surface-2);border-radius:8px;padding:9px 11px;color:var(--ink)}
+  /* ===== Scheduled (in sidebar, under Coming Up) ===== */
+  .sch-form{display:flex;flex-direction:column;gap:8px;margin:2px 0 12px}
+  .sch-form input,.sch-form select{font-family:var(--font-body);font-size:13px;border:1px solid var(--line);background:var(--surface-2);border-radius:8px;padding:9px 10px;color:var(--ink);width:100%}
   .sch-form input:focus,.sch-form select:focus{outline:none;border-color:var(--blue);background:#fff}
-  .sch-form button{background:var(--navy);color:#fff;border:none;border-radius:8px;padding:9px 16px;font-weight:600;cursor:pointer;font-family:var(--font-body);font-size:13px}
+  .sch-form button{background:var(--navy);color:#fff;border:none;border-radius:8px;padding:10px 12px;font-weight:600;cursor:pointer;font-family:var(--font-body);font-size:13px}
   .sch-form button:hover{background:var(--navy-2)}
   .sch-list{list-style:none}
-  .sch-row{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:12px 14px;margin-bottom:8px}
-  .sch-row .d{font-family:var(--font-head);font-weight:700;font-size:12.5px;color:var(--blue);min-width:120px}
+  .sch-row{display:flex;flex-wrap:wrap;align-items:baseline;gap:3px 8px;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-bottom:6px}
+  .sch-row .d{font-family:var(--font-head);font-weight:700;font-size:11px;color:var(--blue);flex:1 1 100%}
   .sch-row.soon .d{color:var(--c-mustdo)}
-  .sch-row .t{flex:1;font-size:13.5px}
-  .sch-row .badge{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line);padding:3px 8px;border-radius:20px}
-  .sch-row .x{opacity:.5}.sch-row:hover .x{opacity:1}
+  .sch-row .t{flex:1 1 100%;font-size:12.5px;line-height:1.35}
+  .sch-row .badge{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;color:var(--muted);background:var(--surface);border:1px solid var(--line);padding:2px 7px;border-radius:20px}
+  .sch-row .x{opacity:.5;margin-left:auto}.sch-row:hover .x{opacity:1}
+  #schList .group-label{margin:12px 0 6px}
+  #schList .big-empty{padding:16px 6px;font-size:12px}
+  #schList .big-empty .ic{font-size:22px;margin-bottom:4px}
   .group-label{font-family:var(--font-head);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:16px 0 8px}
 
   .big-empty{text-align:center;color:#9aa7b6;padding:40px 20px;font-size:13px}
@@ -389,12 +389,9 @@
     .kind-toggle button{padding:9px;font-size:12px}
     .mini-add button{min-width:46px;font-size:18px}
 
-    /* Scheduled form stacks to a single column */
-    .sch-form{grid-template-columns:1fr;gap:9px;padding:13px}
+    /* Scheduled form (now in sidebar) — comfortable tap targets */
+    .sch-form{gap:9px}
     .sch-form button{min-height:46px;font-size:15px}
-    .sch-row{flex-wrap:wrap;gap:6px 10px}
-    .sch-row .d{min-width:0;flex:1 1 100%}
-    .sch-row .badge{order:3}
 
     /* Brain dump: comfortable controls; chips wrap with room to tap */
     .bd-input button{min-height:52px;padding:0 16px}
@@ -492,21 +489,6 @@
         <div id="boardView" class="hide">
           <div class="board" id="board"></div>
         </div>
-
-        <!-- Scheduled tasks live here on the main Planner page -->
-        <div class="sched-onmain" id="view-scheduled">
-          <div class="sch-head">
-            <h2>📅 Scheduled Tasks</h2>
-            <p class="desc" style="font-size:12.5px;color:var(--muted);margin-top:4px">Park a task on a future date. It auto-appears in that day's section when the date arrives — and the next 5 days also show in your sidebar.</p>
-          </div>
-          <div class="sch-form">
-            <input type="text" id="schText" placeholder="What needs doing…">
-            <input type="date" id="schDate">
-            <select id="schSection"></select>
-            <button id="schAdd">Schedule</button>
-          </div>
-          <div id="schList"></div>
-        </div>
       </section>
 
       <!-- ============ BRAIN DUMP ============ -->
@@ -550,6 +532,19 @@
       <div class="panel sched">
         <div class="panel-head">⏰ Coming Up (5 days)</div>
         <div class="panel-body" id="sideSched"></div>
+      </div>
+
+      <div class="panel sched">
+        <div class="panel-head">📅 Schedule a Task</div>
+        <div class="panel-body">
+          <div class="sch-form">
+            <input type="text" id="schText" placeholder="What needs doing…">
+            <input type="date" id="schDate">
+            <select id="schSection"></select>
+            <button id="schAdd">Schedule</button>
+          </div>
+          <div id="schList"></div>
+        </div>
       </div>
     </aside>
   </div>
